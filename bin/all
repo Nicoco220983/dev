@@ -1,0 +1,6 @@
+#!/bin/bash
+for repo in $DEV_REPOS; do
+  echo "### $(basename "$repo")"
+  cd "$repo"
+  "$@"
+done
