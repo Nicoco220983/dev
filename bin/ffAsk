@@ -1,0 +1,36 @@
+#!/bin/bash -e
+FILES=$(ff "$@" | head -n 10)
+if [ -z "$FILES" ]; then
+  exit 0
+elif [ $(echo "$FILES" | wc -l) -eq 1 ]; then
+  echo "$FILES"
+else
+  # sort files in case you find exact name
+  SORTED_FILES=""
+  for FILE in $(echo "$FILES"); do
+    if [ $(basename "$FILE") = "$1" ]; then
+      SORTED_FILES="$FILE"$'\n'"$SORTED_FILES"
+    else
+      SORTED_FILES="${SORTED_FILES}${FILE}"$'\n'
+    fi
+  done
+  FILES=$(echo "$SORTED_FILES")
+  # ask user to choose a file
+  i=0
+  CHOICES=""
+  for FILE in $(echo "$FILES"); do
+    if [ "$i" -gt 0 ]; then CHOICES="$CHOICES"$'\n'; fi
+    CHOICES="${CHOICES}${i} ${FILE}"
+    let "i+=1"
+  done
+  >&2 echo "Pick a file:" 
+  >&2 echo "$CHOICES" 
+  # read response
+  read -n 1 res
+  if [ "$res" = "*" ]; then echo "$FILES"; exit 0; fi
+  if [ -z "$res" ] || [ "$res" = " " ]; then res=0; fi
+  let "res+=1"
+  FILE=$(echo "$FILES" | head -n "$res" | tail -n1)
+  [ -z "$FILE" ] && exit 1
+  echo "$FILE"
+fi

@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+USAGE="$(basename $0) NAME1 NAME2 FILES..."
+
+NAME1=$1
+NAME2=$2
+( [ -z "$NAME1" ] || [ -z "$NAME2" ] ) && echo "Usage: $USAGE" && exit 1
+shift; shift
+
+for file in "$@"; do
+
+  # rename file
+  file2=$(echo "$file" | sed 's#'"$NAME1"'#'"$NAME2"'#')
+  if [ "$file" != "$file2" ]; then
+    mv "$file" "$file2"
+    file="$file2"
+  fi
+
+  # replace content
+  sed -i 's#'"$NAME1"'#'"$NAME2"'#g' "$file"
+done

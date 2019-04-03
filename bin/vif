@@ -1,0 +1,9 @@
+#!/bin/bash -e
+FILES=$(ffAsk "$@")
+if [ -z "$FILES" ]; then
+  >&2 echo "[ERROR] Could not find files from: $@" && exit 1
+elif [ $(echo "$FILES" | wc -l) -eq 1 ]; then
+  vi "$FILES"
+else
+  vi -p $FILES
+fi

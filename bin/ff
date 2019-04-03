@@ -1,0 +1,9 @@
+#!/bin/bash -e
+FIND_ARGS=()
+if [ "$DEV_EXCLUDE" ]; then
+    IFS=':' read -a DEV_EXCLUDE_ARR <<< "$DEV_EXCLUDE"
+    for exc in "${DEV_EXCLUDE_ARR[@]}"; do
+        FIND_ARGS+=("-not" "-path" "$exc")
+    done
+fi
+find . -type f -ipath "*$1*" "${FIND_ARGS[@]}"
