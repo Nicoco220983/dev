@@ -1,4 +1,4 @@
-_DEVENV_PATH="$_"
+_DEVENV_PATH="${BASH_SOURCE:-$_}"
 export PATH=$(dirname "$_DEVENV_PATH")/bin:$PATH
 
 export PYTHONSTARTUP="$(dirname "$_DEVENV_PATH")/py/_py_startup.py"
